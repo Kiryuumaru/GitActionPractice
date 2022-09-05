@@ -32,6 +32,8 @@ jobs:
       env:
         WITH_V: true
         DEFAULT_BUMP: none
+
+    - name: Print
       run: echo ${{ needs.version_checker.outputs.new_tag }}
 
   publish:
