@@ -27,10 +27,13 @@ jobs:
           fetch-depth: 0
       - name: Bump version and push tag
         id: bump
-        uses: anothrNick/github-tag-action@1.39.0
+        uses: anothrNick/github-tag-action@1.36.0
         env:
           WITH_V: true
           DEFAULT_BUMP: none
+          PRERELEASE_SUFFIX: prerelease
+      - name: Echo
+        run: echo ${{ steps.bump.outputs.part }}
       - name: Echo
         run: echo ${{ steps.bump.outputs.tag }}
       - name: Echo
