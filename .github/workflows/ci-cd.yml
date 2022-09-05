@@ -16,6 +16,7 @@ env:
 jobs:
 
   version_bumper:
+    name: Version Bumper
     runs-on: ubuntu-latest
     outputs:
       new_tag: ${{ steps.bump.outputs.new_tag }}
@@ -30,11 +31,14 @@ jobs:
           WITH_V: true
           DEFAULT_BUMP: none
 
-  release:
+  publish:
+    name: Publish
     needs: version_bumper
     if: needs.version_bumper.outputs.new_tag != ''
     runs-on: ubuntu-latest
     steps:
+    - name: Echo
+      run: echo ${{ needs.version_bumper.outputs.new_tag }}
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
