@@ -19,6 +19,7 @@ jobs:
     name: Version Bumper
     runs-on: ubuntu-latest
     outputs:
+      tag: ${{ steps.bump.outputs.tag }}
       new_tag: ${{ steps.bump.outputs.new_tag }}
     steps:
       - uses: actions/checkout@v2
@@ -34,11 +35,9 @@ jobs:
   publish:
     name: Publish
     needs: version_bumper
-    if: needs.version_bumper.outputs.new_tag != ''
+    if: needs.version_bumper.outputs.tag != needs.version_bumper.outputs.new_tag
     runs-on: ubuntu-latest
     steps:
-    - name: Echo
-      run: echo ${{ needs.version_bumper.outputs.new_tag }}
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
