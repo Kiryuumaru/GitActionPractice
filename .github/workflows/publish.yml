@@ -2,8 +2,8 @@ name: "Publish"
 
 on:
   push:
-    tags:
-    - 'v*'
+    branches:
+    - 'master'
 
 env:
   PROJECT_NAME: 'GitActionPractice'
@@ -14,10 +14,32 @@ env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
-  publish:
-    name: 'Publish'
-    runs-on: 'windows-latest'
+  version_checker:
+    name: 'Version Checker'
+    runs-on: 'ubuntu-latest'
+    outputs:
+      new_tag: ${{ steps.bump.outputs.new_tag }}
+
     steps:
+
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: '0'
+
+    - name: Bump version and push tag
+      id: bump
+      uses: anothrNick/github-tag-action@1.36.0
+      env:
+        WITH_V: true
+        DEFAULT_BUMP: none
+      run: echo ${{ needs.version_checker.outputs.new_tag }}
+
+  publish:
+    if: ${{ needs.version_checker.outputs.new_tag != '' }}
+    name: 'Publish'
+    runs-on: 'ubuntu-latest'
+    steps:
+
     - name: 'Checkout'
       uses: actions/checkout@v2
 
