@@ -16,7 +16,7 @@ env:
 jobs:
   version_bumper:
     runs-on: ubuntu-latest
-    output:
+    outputs:
       new_tag: ${{ steps.bump.outputs.new_tag }}
     steps:
       - uses: actions/checkout@v2
