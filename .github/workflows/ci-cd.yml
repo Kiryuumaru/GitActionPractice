@@ -43,12 +43,15 @@ jobs:
       - name: Get Versions
         uses: actions/github-script@v4
         id: version
+        debug: true
         with:
           script: |
             const tag = ${{ needs.version_bumper.outputs.new_tag }}
             const no_v = tag.replace('v', '')
+            const is_prerelease = no_v.lastIndexOf('-') > -1
             core.setOutput('tag', tag)
             core.setOutput('no-v', no_v)
+            core.setOutput('is_prerelease', is_prerelease)
       - name: Install dotnet
         uses: actions/setup-dotnet@v1
         with:
@@ -67,7 +70,7 @@ jobs:
         with:
           body: ${{ steps.github_release.outputs.changelog }}
           draft: false
-          prerelease: ${{ steps.version.outputs.prerelease == true }}
+          prerelease: ${{ steps.version.outputs.is_prerelease == true }}
           files: ${{ env.PACKAGE_OUTPUT_DIRECTORY }}\*
       - name: Push package to Github
         run: dotnet nuget push ${{ env.PACKAGE_OUTPUT_DIRECTORY }}\*.nupkg -k ${{ secrets.GITHUB_TOKEN }} -s ${{ env.GITHUB_SOURCE_URL }}
