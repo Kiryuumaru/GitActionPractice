@@ -43,8 +43,8 @@ jobs:
       - name: Get Versions
         uses: actions/github-script@v4
         id: version
-        debug: true
         with:
+          debug: true
           script: |
             const tag = ${{ needs.version_bumper.outputs.new_tag }}
             const no_v = tag.replace('v', '')
