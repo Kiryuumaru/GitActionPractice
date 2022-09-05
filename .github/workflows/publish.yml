@@ -1,9 +1,10 @@
 name: "Publish"
 
 on:
-  push:
-    branches:
-    - 'master'
+  workflow_run:
+    workflows: [Version Checker]
+    types:
+      - completed
 
 env:
   PROJECT_NAME: 'GitActionPractice'
@@ -16,7 +17,7 @@ env:
 jobs:
   publish:
     name: 'Publish'
-    runs-on: 'ubuntu-latest'
+    runs-on: 'windows-latest'
     steps:
 
     - name: 'Checkout'

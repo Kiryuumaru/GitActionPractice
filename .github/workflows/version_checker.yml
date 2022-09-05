@@ -20,3 +20,6 @@ jobs:
       env:
         WITH_V: true
         DEFAULT_BUMP: none
+
+    - name: Print
+      run: echo ${{ steps.bump.outputs.new_tag }}
