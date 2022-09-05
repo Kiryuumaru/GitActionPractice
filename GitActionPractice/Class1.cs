@@ -1,6 +1,6 @@
 ﻿namespace GitActionPractice
 {
-    public class Class1sawd
+    public class Class1s
     {
 
     }
