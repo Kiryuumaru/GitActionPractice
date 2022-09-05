@@ -47,7 +47,7 @@ jobs:
           script: |
             const ver = '${{ needs.version_bumper.outputs.new_tag }}'
             const ver_no_v = ver.replace('v', '')
-            const is_prerelease = ver-no-v.lastIndexOf('-') > -1
+            const is_prerelease = ver_no_v.lastIndexOf('-') > -1
             core.setOutput('ver', ver)
             core.setOutput('ver-no-v', ver_no_v)
             core.setOutput('is-prerelease', is_prerelease)
