@@ -42,13 +42,21 @@ jobs:
       - uses: actions/checkout@v2
       - name: Get Version
         id: version
-        uses: battila7/get-version-action@v2
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            const ver = '${{ needs.version_bumper.outputs.new_tag }}'
+            const ver_no_v = ver.replace('v', '')
+            const is_prerelease = ver-no-v.lastIndexOf('-') > -1
+            core.setOutput('ver', ver)
+            core.setOutput('ver-no-v', ver_no_v)
+            core.setOutput('is-prerelease', is_prerelease)
       - name: Print1
-        run: echo ${{ steps.version.outputs.version }}
+        run: echo ${{ steps.version.outputs.ver }}
       - name: Print2
-        run: echo WOV ${{ steps.version.outputs.version-without-v }}
+        run: echo WOV ${{ steps.version.outputs.ver-no-v }}
       - name: Print3
-        run: echo is pre ${{ steps.version.outputs.prerelease != '' }}
+        run: echo is pre ${{ steps.version.outputs.is-prerelease == true }}
       - name: Install dotnet
         uses: actions/setup-dotnet@v1
         with:
