@@ -34,7 +34,7 @@ jobs:
         DEFAULT_BUMP: none
 
     - name: Print
-      run: echo ${{ needs.version_checker.outputs.new_tag }}
+      run: echo ${{ steps.bump.outputs.new_tag }}
 
   publish:
     if: ${{ needs.version_checker.outputs.new_tag != '' }}
