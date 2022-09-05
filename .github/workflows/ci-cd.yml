@@ -60,7 +60,7 @@ jobs:
       with:
         body: ${{ steps.github_release.outputs.changelog }}
         draft: false
-        prerelease: ${{ steps.version.outputs.prerelease !=  }}
+        prerelease: ${{ steps.version.outputs.prerelease == true }}
         files: ${{ env.PACKAGE_OUTPUT_DIRECTORY }}\*
     - name: Push package to Github
       run: dotnet nuget push ${{ env.PACKAGE_OUTPUT_DIRECTORY }}\*.nupkg -k ${{ secrets.GITHUB_TOKEN }} -s ${{ env.GITHUB_SOURCE_URL }}
