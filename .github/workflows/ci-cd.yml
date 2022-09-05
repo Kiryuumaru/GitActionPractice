@@ -19,6 +19,7 @@ jobs:
     name: Version Bumper
     runs-on: ubuntu-latest
     outputs:
+      new_tag: ${{ steps.bump.outputs.new_tag }}
       part: ${{ steps.bump.outputs.part }}
     steps:
       - uses: actions/checkout@v2
@@ -39,9 +40,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Get Version
+      - name: Get Versions
+        uses: actions/github-script@v4
         id: version
-        uses: battila7/get-version-action@v2
+        with:
+          script: |
+            const tag = ${{ needs.version_bumper.outputs.new_tag }}
+            const no_v = tag.replace('v', '')
+            const dash_index = no_v.lastIndexOf('-')
+            const no_dash = (dash_index > -1) ?  no_v.substring(0, dash_index) : no_v
+            core.setOutput('tag', tag)
+            core.setOutput('no-v', no_v)
+            core.setOutput('no-dash', no_dash)
       - name: Install dotnet
         uses: actions/setup-dotnet@v1
         with:
@@ -51,7 +61,7 @@ jobs:
       - name: Build project
         run: dotnet build ${{ env.PROJECT_PATH }} --no-restore --configuration Release
       - name: Pack project
-        run: dotnet pack ${{ env.PROJECT_PATH }} --no-restore --no-build --configuration Release --include-symbols -p:SymbolPackageFormat=snupkg -p:PackageVersion=${{ steps.version.outputs.version-without-v }} --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }}
+        run: dotnet pack ${{ env.PROJECT_PATH }} --no-restore --no-build --configuration Release --include-symbols -p:SymbolPackageFormat=snupkg -p:PackageVersion=${{ steps.version.outputs.no_v }} --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }}
       - name: Build Changelog
         id: changelog
         uses: mikepenz/release-changelog-builder-action@v3
