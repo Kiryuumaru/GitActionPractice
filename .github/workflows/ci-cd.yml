@@ -51,12 +51,6 @@ jobs:
             core.setOutput('ver', ver)
             core.setOutput('ver-no-v', ver_no_v)
             core.setOutput('is-prerelease', is_prerelease)
-      - name: Print1
-        run: echo ${{ steps.version.outputs.ver }}
-      - name: Print2
-        run: echo WOV ${{ steps.version.outputs.ver-no-v }}
-      - name: Print3
-        run: echo is pre ${{ steps.version.outputs.is-prerelease == true }}
       - name: Install dotnet
         uses: actions/setup-dotnet@v1
         with:
@@ -73,6 +67,7 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
+          tag_name: ${{ steps.version.outputs.ver }}
           body: ${{ steps.github_release.outputs.changelog }}
           draft: false
           prerelease: ${{ steps.version.outputs.is-prerelease == true }}
