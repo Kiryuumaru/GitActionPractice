@@ -13,19 +13,19 @@ jobs:
     runs-on: 'ubuntu-latest'
     steps:
 
-    - name: .github/workflows/version_checker.yml
+    - name: Version Checker
       uses: aurelien-baudet/workflow-dispatch@v2
       with:
-        workflow: Version Checker
+        workflow: .github/workflows/version_checker.yml
         token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Get Version
       id: version
       uses: battila7/get-version-action@v2
 
-    - name: .github/workflows/publish.yml
+    - name: Publish
       if: ${{ steps.version.outputs.version-without-v != 'master'}}
       uses: aurelien-baudet/workflow-dispatch@v2
       with:
-        workflow: Publish
+        workflow: .github/workflows/publish.yml
         token: ${{ secrets.GITHUB_TOKEN }}
