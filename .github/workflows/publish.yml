@@ -1,5 +1,7 @@
 name: "Publish"
 
+on: workflow_dispatch
+
 env:
   PROJECT_NAME: 'GitActionPractice'
   PROJECT_PATH: 'GitActionPractice/GitActionPractice.csproj'

@@ -1,5 +1,7 @@
 name: "Version Checker"
 
+on: workflow_dispatch
+
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

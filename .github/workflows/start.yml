@@ -16,7 +16,7 @@ jobs:
     - name: Version Checker
       uses: aurelien-baudet/workflow-dispatch@v2
       with:
-        workflow: .github/workflows/version_checker.yml
+        workflow: Version Checker
         token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Get Version
@@ -27,5 +27,5 @@ jobs:
       if: ${{ steps.version.outputs.version-without-v != 'master'}}
       uses: aurelien-baudet/workflow-dispatch@v2
       with:
-        workflow: .github/workflows/publish.yml
+        workflow: Publish
         token: ${{ secrets.GITHUB_TOKEN }}
