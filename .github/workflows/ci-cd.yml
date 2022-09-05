@@ -48,9 +48,9 @@ jobs:
             const tag = '${{ needs.version_bumper.outputs.new_tag }}'
             const no_v = tag.replace('v', '')
             const is_prerelease = no_v.lastIndexOf('-') > -1
-            core.setOutput('tag', tag)
-            core.setOutput('no-v', no_v)
-            core.setOutput('is_prerelease', is_prerelease)
+            core.setOutput('tag', 'tag')
+            core.setOutput('no-v', 'no_v')
+            core.setOutput('is_prerelease', 'is_prerelease')
       - name: Install dotnet
         uses: actions/setup-dotnet@v1
         with:
