@@ -61,9 +61,6 @@ jobs:
         run: dotnet build ${{ env.PROJECT_PATH }} --no-restore --configuration Release
       - name: Pack project
         run: dotnet pack ${{ env.PROJECT_PATH }} --no-restore --no-build --configuration Release --include-symbols -p:SymbolPackageFormat=snupkg -p:PackageVersion=${{ steps.version.outputs.ver-no-v }} --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }}
-      - name: Build Changelog
-        id: github_release
-        uses: mikepenz/release-changelog-builder-action@v3
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
