@@ -19,8 +19,7 @@ jobs:
     name: Version Bumper
     runs-on: ubuntu-latest
     outputs:
-      tag: ${{ steps.bump.outputs.tag }}
-      new_tag: ${{ steps.bump.outputs.new_tag }}
+      part: ${{ steps.bump.outputs.part }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -32,19 +31,11 @@ jobs:
           WITH_V: true
           DEFAULT_BUMP: none
           PRERELEASE_SUFFIX: prerelease
-      - name: Echo
-        run: echo ${{ steps.bump.outputs.part }}
-      - name: Echo
-        run: echo ${{ steps.bump.outputs.tag }}
-      - name: Echo
-        run: echo ${{ steps.bump.outputs.new_tag }}
-      - name: Echo
-        run: echo ${{ needs.version_bumper.outputs.tag != needs.version_bumper.outputs.new_tag }}
 
   publish:
     name: Publish
     needs: version_bumper
-    if: needs.version_bumper.outputs.tag != needs.version_bumper.outputs.new_tag
+    if: needs.version_bumper.outputs.part != ''
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
