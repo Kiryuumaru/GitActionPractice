@@ -47,11 +47,8 @@ jobs:
           script: |
             const tag = ${{ needs.version_bumper.outputs.new_tag }}
             const no_v = tag.replace('v', '')
-            const dash_index = no_v.lastIndexOf('-')
-            const no_dash = (dash_index > -1) ?  no_v.substring(0, dash_index) : no_v
             core.setOutput('tag', tag)
             core.setOutput('no-v', no_v)
-            core.setOutput('no-dash', no_dash)
       - name: Install dotnet
         uses: actions/setup-dotnet@v1
         with:
