@@ -68,10 +68,10 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ steps.version.outputs.ver }}
-          body: ${{ steps.github_release.outputs.changelog }}
-          draft: false
-          prerelease: ${{ steps.version.outputs.is-prerelease == true }}
           files: ${{ env.PACKAGE_OUTPUT_DIRECTORY }}/*
+          prerelease: ${{ steps.version.outputs.is-prerelease == true }}
+          generate_release_notes: true
+          draft: false
       - name: Push package to Github
         run: dotnet nuget push ${{ env.PACKAGE_OUTPUT_DIRECTORY }}/*.nupkg -k ${{ secrets.GITHUB_TOKEN }} -s ${{ env.GITHUB_SOURCE_URL }}
       - name: Push package to NuGet
