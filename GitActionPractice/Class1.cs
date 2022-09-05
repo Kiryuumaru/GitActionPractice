@@ -1,6 +1,6 @@
 ﻿namespace GitActionPractice
 {
-    public class Class1sascascasccsc
+    public class Class1sascascasccsddc
     {
 
     }
