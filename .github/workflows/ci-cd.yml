@@ -40,19 +40,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Get Versions
-        uses: actions/github-script@v6
+      - name: Get Version
         id: version
-        with:
-          script: |
-            const tag = '${{ needs.version_bumper.outputs.new_tag }}'
-            const no_v = tag.replace('v', '')
-            const is_prerelease = no_v.lastIndexOf('-') > -1
-            core.setOutput('tag', tag)
-            core.setOutput('no-v', no_v)
-            core.setOutput('is_prerelease', is_prerelease)
-            console.log('${{ steps.version.outputs.no_v }}')
-            console.log(no_v)
+        uses: battila7/get-version-action@v2
+      - name: Print1
+        run: echo ${{ steps.version.outputs.version }}
+      - name: Print2
+        run: echo WOV ${{ steps.version.outputs.version-without-v }}
+      - name: Print3
+        run: echo is pre ${{ steps.version.outputs.prerelease != '' }}
       - name: Install dotnet
         uses: actions/setup-dotnet@v1
         with:
@@ -62,7 +58,7 @@ jobs:
       - name: Build project
         run: dotnet build ${{ env.PROJECT_PATH }} --no-restore --configuration Release
       - name: Pack project
-        run: dotnet pack ${{ env.PROJECT_PATH }} --no-restore --no-build --configuration Release --include-symbols -p:SymbolPackageFormat=snupkg -p:PackageVersion=${{ steps.version.outputs.no_v }} --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }}
+        run: dotnet pack ${{ env.PROJECT_PATH }} --no-restore --no-build --configuration Release --include-symbols -p:SymbolPackageFormat=snupkg -p:PackageVersion=${{ steps.version.outputs.version-without-v }} --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }}
       - name: Build Changelog
         id: changelog
         uses: mikepenz/release-changelog-builder-action@v3
@@ -71,7 +67,7 @@ jobs:
         with:
           body: ${{ steps.github_release.outputs.changelog }}
           draft: false
-          prerelease: ${{ steps.version.outputs.is_prerelease == true }}
+          prerelease: ${{ steps.version.outputs.prerelease == true }}
           files: ${{ env.PACKAGE_OUTPUT_DIRECTORY }}\*
       - name: Push package to Github
         run: dotnet nuget push ${{ env.PACKAGE_OUTPUT_DIRECTORY }}\*.nupkg -k ${{ secrets.GITHUB_TOKEN }} -s ${{ env.GITHUB_SOURCE_URL }}
