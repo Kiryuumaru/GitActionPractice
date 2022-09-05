@@ -1,0 +1,29 @@
+name: "Start"
+
+on:
+  push:
+    branches:
+    - 'master'
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  version_checker:
+    runs-on: 'ubuntu-latest'
+    steps:
+
+    - name: Version Checker
+      uses: aurelien-baudet/workflow-dispatch@v2
+      with:
+        workflow: Version Checker
+
+    - name: Get Version
+      id: version
+      uses: battila7/get-version-action@v2
+
+    - name: Publish
+      if: ${{ steps.version.outputs.version-without-v != 'master'}}
+      uses: aurelien-baudet/workflow-dispatch@v2
+      with:
+        workflow: Publish

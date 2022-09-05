@@ -1,11 +1,5 @@
 name: "Publish"
 
-on:
-  workflow_run:
-    workflows: [Version Checker]
-    types:
-      - completed
-
 env:
   PROJECT_NAME: 'GitActionPractice'
   PROJECT_PATH: 'GitActionPractice/GitActionPractice.csproj'
