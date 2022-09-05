@@ -17,6 +17,7 @@ jobs:
       uses: aurelien-baudet/workflow-dispatch@v2
       with:
         workflow: Version Checker
+        token: ${{ secrets.PERSONAL_TOKEN }}
 
     - name: Get Version
       id: version
@@ -27,3 +28,4 @@ jobs:
       uses: aurelien-baudet/workflow-dispatch@v2
       with:
         workflow: Publish
+        token: ${{ secrets.PERSONAL_TOKEN }}
