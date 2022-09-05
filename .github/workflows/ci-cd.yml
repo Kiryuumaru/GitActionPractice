@@ -2,8 +2,8 @@ name: CI CD Pipeline
 
 on:
   push:
-	branches:
-	  - master
+    branches:
+      - master
 
 env:
   PROJECT_NAME: GitActionPractice
@@ -15,28 +15,28 @@ env:
 
 jobs:
   version_bumper:
-	runs-on: ubuntu-latest
-	output:
-	  new_tag: ${{ steps.bump.outputs.new_tag }}
-	steps:
-	- uses: actions/checkout@v2
-	  with:
-		fetch-depth: 0
-	- name: Bump version and push tag
-	  id: bump
-	  uses: anothrNick/github-tag-action@1.36.0
-	  env:
-		WITH_V: true
-		DEFAULT_BUMP: none
-		
+    runs-on: ubuntu-latest
+    output:
+      new_tag: ${{ steps.bump.outputs.new_tag }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Bump version and push tag
+        id: bump
+        uses: anothrNick/github-tag-action@1.36.0
+        env:
+          WITH_V: true
+          DEFAULT_BUMP: none
+        
 release:
   needs: version_bumper
   if: needs.version_bumper.outputs.new_tag != ''
   runs-on: ubuntu-latest
   steps:
   - uses: actions/checkout@v2
-  	with:
-	  fetch-depth: 0
+    with:
+      fetch-depth: 0
   - name: Get Version
     id: version
     uses: battila7/get-version-action@v2
@@ -51,16 +51,16 @@ release:
   - name: Pack project
     run: dotnet pack ${{ env.PROJECT_PATH }} --no-restore --no-build --configuration Release --include-symbols -p:SymbolPackageFormat=snupkg -p:PackageVersion=${{ steps.version.outputs.version-without-v }} --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }}
   - name: Build Changelog
-	id: changelog
-	uses: mikepenz/release-changelog-builder-action@v3
+    id: changelog
+    uses: mikepenz/release-changelog-builder-action@v3
   - name: Create Release
-	id: create_release
-	uses: softprops/action-gh-release@v1
-	with:
-	  body: ${{ steps.github_release.outputs.changelog }}
-	  draft: false
-	  prerelease: ${{ steps.version.outputs.prerelease !=  }}
-	  files: ${{ env.PACKAGE_OUTPUT_DIRECTORY }}\*
+    id: create_release
+    uses: softprops/action-gh-release@v1
+    with:
+      body: ${{ steps.github_release.outputs.changelog }}
+      draft: false
+      prerelease: ${{ steps.version.outputs.prerelease !=  }}
+      files: ${{ env.PACKAGE_OUTPUT_DIRECTORY }}\*
   - name: Push package to Github
     run: dotnet nuget push ${{ env.PACKAGE_OUTPUT_DIRECTORY }}\*.nupkg -k ${{ secrets.GITHUB_TOKEN }} -s ${{ env.GITHUB_SOURCE_URL }}
   - name: Push package to NuGet
