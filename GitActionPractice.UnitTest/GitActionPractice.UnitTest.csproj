@@ -21,4 +21,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\GitActionPractice\GitActionPractice.csproj" />
+  </ItemGroup>
+
 </Project>
